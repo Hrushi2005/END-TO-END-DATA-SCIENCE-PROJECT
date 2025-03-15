@@ -1,0 +1,60 @@
+from flask import Flask, request, render_template
+from flask_ngrok import run_with_ngrok
+import pickle
+import numpy as np
+
+# Load Trained Model
+with open('model.pkl', 'rb') as file:
+    model = pickle.load(file)
+
+# Initialize Flask App
+app = Flask(__name__)
+run_with_ngrok(app)  # For running Flask on Colab
+
+# Home Route
+@app.route('/')
+def home():
+    return """
+    <h1>Heart Disease Prediction</h1>
+    <form action="/predict" method="post">
+        <label>Patient Name:</label> <input type="text" name="name" required><br>
+        <label>Age:</label> <input type="text" name="age" required><br>
+        <label>Sex (M:1, F:0):</label> <input type="text" name="sex" required><br>
+        <label>Chest Pain (Yes:1, No:0):</label> <input type="text" name="cp" required><br>
+        <label>Resting Blood Pressure:</label> <input type="text" name="bp" required><br>
+        <label>Cholesterol Level:</label> <input type="text" name="cl" required><br>
+        <input type="submit" value="Predict">
+    </form>
+    """
+
+# Prediction Route
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        # Collect User Input
+        name = request.form['name']
+        age = int(request.form['age'])
+        sex = int(request.form['sex'])
+        cp = int(request.form['cp'])
+        bp = int(request.form['bp'])
+        cl = int(request.form['cl'])
+
+        # Prediction
+        prediction = model.predict([[age, sex, cp, bp, cl]])[0]
+
+        # Result Logic
+        if prediction == 1:
+            result = f"{name} is at risk of a heart attack! ⚠"
+            if bp <= 60:
+                result += " Critical Condition! Immediate medical attention required."
+        else:
+            result = f"{name}'s heart is healthy. ✅"
+
+        return f"<h2>{result}</h2>"
+
+    except Exception as e:
+        return f"<h2>Error: {e}</h2>"
+
+# Run the Flask app
+if __name__ == "__main__":
+    app.run()
