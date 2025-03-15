@@ -15,4 +15,4 @@ This code builds a pipeline to predict the risk of heart disease using a Random 
 
 The Flask application provides a user-friendly interface for prediction. A simple HTML form collects patient data such as name, age, sex, chest pain, blood pressure, and cholesterol level. On submission, the model predicts whether the patient is at risk of a heart attack. If the blood pressure is critically low (≤60), additional warnings are displayed. The app runs locally or in Google Colab via flask_ngrok, demonstrating an end-to-end machine learning deployment process.
 *output*:https://github.com/Hrushi2005/END-TO-END-DATA-SCIENCE-PROJECT/issues/2#issue-2922424027
-*output*:
+*output*:https://github.com/Hrushi2005/END-TO-END-DATA-SCIENCE-PROJECT/issues/3#issue-2922425554
